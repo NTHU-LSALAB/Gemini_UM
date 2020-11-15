@@ -2,9 +2,11 @@
 
 ## About
 
-Gemini is an efficient GPU resource sharing system with fine-grained control for Linux platforms.
+Gemini_UM is an efficient GPU resource sharing system with fine-grained control for Linux platforms.
 
 It shares a NVIDIA GPU among multiple clients with specified resource constraint, and works seamlessly with any CUDA-based GPU programs. Besides, it is also work-conserving and with low overhead, so nearly no compute resource waste will happen.
+
+Furthermore, Gemini_UM intercepts the cuda memory allocation call, and let the gpu programs to use unified memory. With unified memory, we can share more jobs on the same GPU.
 
 ## System Structure
 
