@@ -18,12 +18,27 @@ Gemini consists of three parts: *scheduler*, *pod manager* and *hook library*.
 
 Currently we use *TCP socket* as the communication interface between components.
 
+## Unified memory optimization
+Although with Unified memory, we can share more jobs on the same GPU, it comes with some overhead. The overhead is mostly come from the data transfer when context switch. And our goal is to improve the aggregate throughput when sharing multiple Deep-learning jobs on a GPU. So based on the properties of Deep-learning jobs(refers to the paper: [Salus: Fine-Grained GPU Sharing Primitives for Deep Learning Applications](https://arxiv.org/abs/1902.04610)), we propose a method to reduce the overhead for the Pytorch frameworck based Deep-learning program. 
+According to the Salus, we can divide DL memory allocations into:
+* Model: holding model parameters, persistent region, fixed sized during job life.
+* Ephemeral: temporary data during each iteration, outputs of middle layers. Only needed during computations and released between iterations.
+* Framework-internal: persistent region, fixed sized, used by framework for book-keeping or data preparation pipelined.
+And Persistent <<< Ephemeral memory. 
+
+Furthermore, Pytorch use caching memory allocator to manage memory, it will cache the memory for fast memory deallocation without device synchronizations. This mechanism is useful when only one job on the GPU, but if we want to share the GPU, it will be a problem because we need to copy the unused memory from GPU to host(or from host to GPU) when GPU memory oversubscription.
+
+So our idea is to free the unused memory every iteration, and pytorch provide a API:
+* torch.cuda.empty_cache(): Releases all unoccupied cached memory currently held by the caching allocator so that those can be used in other GPU application and visible in nvidia-smi.
+We just use this API in our library to help the client to empty the cache after each iteration. 
+
+
 ## Build
 
 Basically all components can be built with the following command:
 
 ```
-make [CUDA_PATH=/path/to/cuda/installation] [PREFIX=/place/to/install] [DEBUG=1]
+make [CUDA_PATH=/path/to/cuda/installation] [PREFIX=/place/to/install] [DEBUG=1] [TORCH_INCLUDE_PATH=/path/to/torch/installation]
 ```
 
 This command will install the built binaries in `$(PREFIX)/bin` and `$(PREFIX)/lib`. Default value for `PREFIX` is `$(pwd)/..`.
