@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+  labels: 
+    use-gpu: "true"
+spec:
+  hostNetwork: true
+  restartPolicy: Never
+  
+  containers:
+    - name: pytorch-container
+      image:  cjobr/pytorch_test:v1
+      command: ["/bin/sh", "-c"]
+      args: ["sleep 10000"]
+      
+      resources:
+        limits:
+          nvidia.com/gpu: 1
