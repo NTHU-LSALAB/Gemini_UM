@@ -1,9 +1,3 @@
-# Kubernetes Admission Webhook example
-
-This tutoral shows how to build and deploy an [AdmissionWebhook](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#admission-webhooks).
-
-The Kubernetes [documentation](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/) contains a common set of recommended labels that allows tools to work interoperably, describing objects in a common manner that all tools can understand. In addition to supporting tooling, the recommended labels describe applications in a way that can be queried.
-In our validating webhook example we make these labels required on deployments and services, so this webhook rejects every deployment and every service that doesn’t have these labels set. The mutating webhook in the example adds all the missing required labels with `not_available` set as the value.
 
 ## Prerequisites
 
@@ -26,7 +20,14 @@ Build and push docker image
 ./build
 ```
 
-## How does it work?
-
-We have a blog post that explains webhooks in depth with the help of this example. Check [it](https://www.qikqiak.com/post/k8s-admission-webhook/) out!
-
+```
+./deployment/webhook-create-signed-cert.sh
+kubectl get secret admission-webhook-example-certs
+kubectl create -f deployment/deployment.yaml
+kubectl create -f deployment/service.yaml
+kubectl create -f deployment/rbac.yaml
+kubectl label namespace default admission-webhook-example=enabled
+cat ./deployment/mutatingwebhook.yaml | ./deployment/webhook-patch-ca-bundle.sh > ./deployment/mutatingwebhook-ca-bundle.yaml
+kubectl create -f deployment/mutatingwebhook-ca-bundle.yaml
+```
+For more information about the webhook, you can check this [blog](https://www.qikqiak.com/post/k8s-admission-webhook/)
