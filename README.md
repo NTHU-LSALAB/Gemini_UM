@@ -70,6 +70,14 @@ By default scheduler uses port `50051`, and pod managers use ports starting from
 
 For more details, refer to those scripts and source code.
 
+### Webhook
+
+We also provide a webhook for k8s system. The mutation webhook will mount the directory which contains the hook library for the pods that use GPU. And then GPU pods can do GPU sharing through our hook library. Our webhook is based on a webhook example.(https://github.com/cnych/admission-webhook-example) 
+
+### How to launch the webhook
+
+You can follow the steps in /webhook/README.md.
+
 ## Contributors
 
 [jim90247](https://github.com/jim90247)
