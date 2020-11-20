@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# path to CUDA installation
+# path to torch include path
 TORCH_INCLUDE_PATH ?= /home/deployer/anaconda2/envs/test/lib/python3.7/site-packages/torch/include
+# path to CUDA installation
 CUDA_PATH ?= /usr/local/cuda-10.0
 CUPTI_PATH=/usr/local/cuda/extras/CUPTI
 PWD := $(shell pwd)
