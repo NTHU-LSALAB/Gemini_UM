@@ -54,7 +54,7 @@
 #include "debug.h"
 #include "predictor.h"
 #include "util.h"
-#include "c10/cuda/CUDACachingAllocator.h"
+#include "c10/cuda/CUDACachingAllocator.h" // include torch caching allocator library
 std::vector<CUdeviceptr> memory_list;
 extern "C" {
 void *__libc_dlsym(void *map, const char *name);
@@ -446,6 +446,7 @@ void *wait_cuda_kernels(void *args) {
     cudaEventCreate(&event);
     cudaEventRecord(event);
     cudaEventSynchronize(event);
+    //flush memory using torch API
     c10::cuda::CUDACachingAllocator::emptyCache();
     // notify predictor we've done a synchronize
     host_sync_call("overuse measurement");
