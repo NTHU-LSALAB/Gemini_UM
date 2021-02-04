@@ -45,9 +45,9 @@ var (
 )
 
 const (
-	admissionWebhookAnnotationValidateKey = "admission-webhook-example.qikqiak.com/validate"
-	admissionWebhookAnnotationMutateKey   = "admission-webhook-example.qikqiak.com/mutate"
-	admissionWebhookAnnotationStatusKey   = "admission-webhook-example.qikqiak.com/status"
+	admissionWebhookAnnotationValidateKey = "admission-webhook.lsalab.com/validate"
+	admissionWebhookAnnotationMutateKey   = "admission-webhook.lsalab.com/mutate"
+	admissionWebhookAnnotationStatusKey   = "admission-webhook.lsalab.com/status"
 
 	nameLabel      = "app.kubernetes.io/name"
   gpuLabel       = "use-gpu"
